@@ -1,0 +1,18 @@
+this.#context.beginPath();
+This begins a new path on the canvas. Paths are sequences of points that define shapes, lines, or outlines. beginPath(), we tell the canvas that we’re starting a new shape.
+
+this.#context.moveTo(centerX, centerY - size);
+This sets the starting point of the path to the top vertex of the triangle.
+ Since we want the triangle to point upwards, we move to a point size units above the center (centerY - size).
+moveTo(x, y) moves the drawing cursor to the specified coordinates without drawing anything.
+
+this.#context.lineTo(centerX - size * 0.87, centerY + size * 0.5);
+This draws a line from the current point (the top vertex) to the bottom-left vertex of the triangle.
+lineTo(x, y) draws a straight line from the current point to the specified coordinates.
+centerX - size * 0.87 moves the x-coordinate leftward, and centerY + size * 0.5 moves the y-coordinate downward. 
+This positions the bottom-left vertex of the triangle below the top vertex and slightly to the left.
+0.87 is an approximation of the cosine of 30 degrees, and 0.5 is the sine of 30 degrees, which helps us position the points for an equilateral triangle.
+
+this.#context.closePath();
+This closes the path by connecting the last point (the bottom-right vertex) back to the starting point (the top vertex), completing the triangle shape.
+closePath() draws a line back to the starting point, ensuring the shape is enclosed.

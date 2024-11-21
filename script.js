@@ -17,7 +17,7 @@ class TriangleRocket {
 
     window.addEventListener("keydown", (event) => this.keyStates[event.key] = true);
     window.addEventListener("keyup", (event) => this.keyStates[event.key] = false);
-    setInterval(() => this.createAsteroids(), 3000);
+    setInterval(() => this.createAsteroids(), 4000);
 
 
     this.updateAndDraw();
@@ -29,7 +29,6 @@ class TriangleRocket {
     this.#context.fillStyle = 'black';
     this.#context.fillRect(0, 0, this.#canvas.width, this.#canvas.height);
 
-    // Calculate the positions of each triangle vertex based on the angle
     const topX = this.centerX + size * Math.sin(this.angle);
     const topY = this.centerY - size * Math.cos(this.angle);
     const rightX = this.centerX + size * 0.87 * Math.cos(this.angle) - size * 0.5 * Math.sin(this.angle);
@@ -37,7 +36,6 @@ class TriangleRocket {
     const leftX = this.centerX - size * 0.87 * Math.cos(this.angle) - size * 0.5 * Math.sin(this.angle);
     const leftY = this.centerY + size * 0.5 * Math.cos(this.angle) - size * 0.87 * Math.sin(this.angle);
 
-    // Draw the triangle with calculated vertices
     this.#context.beginPath();
     this.#context.moveTo(topX, topY);
     this.#context.lineTo(rightX, rightY);
@@ -79,7 +77,6 @@ class TriangleRocket {
   updateCircles() {
     this.#circles.forEach((circle, index) => 
       {
-      // Update circle position based on its angle and speed
       circle.x += circle.speed * Math.sin(circle.angle);
       circle.y -= circle.speed * Math.cos(circle.angle);
       if (
@@ -90,8 +87,23 @@ class TriangleRocket {
       ) {
         this.#circles.splice(index, 1);
       }
-      })
+           
+         this.#asteroids.forEach((asteroid, aSindex) => {
+             
+            if(this.collisionDetection(circle, asteroid))
+            {
+               asteroid.rocketsToBeDestroyed -= 1;
 
+               if(asteroid.rocketsToBeDestroyed === 0){
+                 this.#asteroids.splice(aSindex, 1);
+               }
+
+               this.#circles.splice(index,1);
+               return;
+            }
+
+          });
+         });
   }
 
   drawCircles(){
@@ -106,8 +118,8 @@ class TriangleRocket {
   }
 
   updatePosition() {
-    const moveAmount = 2; // Reduce move amount for smoother movement
-    const rotateAmount = Math.PI / 180 * 2; // Smaller rotation for smooth turning
+    const moveAmount = 2;
+    const rotateAmount = Math.PI / 180 * 2; 
 
     if (this.keyStates["ArrowUp"]) {
       this.centerY -= moveAmount * Math.cos(this.angle);
@@ -134,7 +146,7 @@ class TriangleRocket {
   }
 
   createAsteroids(){
-    for (let i = 0; i<=4 ;i++){
+    for (let i = 0; i<=2 ;i++){
       
     let x = Math.floor(Math.random() * this.#canvas.width)
     let y = Math.floor(Math.random() * this.#canvas.height)
@@ -146,11 +158,29 @@ class TriangleRocket {
        w: w,
        h: h,
        speed: 1,
-       angle: this.angle
+       angle: this.angle,
+       rocketsToBeDestroyed : 20
     });
     }
     
   }
+
+
+  collisionDetection(circle, asteroid){
+    const rectLeft = asteroid.corX;
+    const rectRight = asteroid.corX + asteroid.w;
+    const rectTop = asteroid.corY;
+    const rectBottom = asteroid.corY + asteroid.h;
+    const closestX = Math.max(rectLeft, Math.min(circle.x, rectRight));
+    const closestY = Math.max(rectTop, Math.min(circle.y, rectBottom));
+
+    const distanceX = circle.x - closestX;
+    const distanceY = circle.y - closestY;
+
+    const distanceSquared = distanceX * distanceX + distanceY * distanceY;
+    return distanceSquared < circle.radius * circle.radius;
+  }
+
 
   updateAndDraw() {
    
@@ -162,8 +192,6 @@ class TriangleRocket {
     this.drawCircles();
     this.drawAsteroids();
     
-  
-   //This method tells the browser to schedule another call to updateAndDraw at the next available screen repaint.
     requestAnimationFrame(() => this.updateAndDraw());
   }
 }

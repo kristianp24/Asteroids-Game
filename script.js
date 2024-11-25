@@ -7,6 +7,8 @@ class TriangleRocket {
   keyStates = {};
   #circles = [];
   #asteroids = [];
+  #numarDeVieti = 4;
+  #triangle = {}
 
   constructor(canvas, context) {
     this.#canvas = canvas;
@@ -36,21 +38,22 @@ class TriangleRocket {
     const leftX = this.centerX - size * 0.87 * Math.cos(this.angle) - size * 0.5 * Math.sin(this.angle);
     const leftY = this.centerY + size * 0.5 * Math.cos(this.angle) - size * 0.87 * Math.sin(this.angle);
 
+    
+
     this.#context.beginPath();
     this.#context.moveTo(topX, topY);
     this.#context.lineTo(rightX, rightY);
     this.#context.lineTo(leftX, leftY);
     this.#context.closePath();
-
-    this.#context.strokeStyle = 'gray';
-    this.#context.stroke();
-
-    if (this.keyStates["x"]){
+    this.#context.strokeStyle = 'red'
+   
+    this.#context.stroke()
+    if (this.keyStates["x"] && this.#circles.length < 3){
       this.#circles.push({
         x:topX,
         y:topY,
         radius:5,
-        speed:2,
+        speed:10,
         angle:this.angle
       });
     }
@@ -108,13 +111,11 @@ class TriangleRocket {
   }
 
   drawCircles(){
-    let contor = 0
     for (let circle of this.#circles){
          this.#context.beginPath();
          this.#context.arc(circle.x, circle.y, circle.radius, 0, 2*Math.PI);
          this.#context.strokeStyle = 'red'
          this.#context.stroke()
-         contor++;
     }
   }
 
@@ -125,16 +126,17 @@ class TriangleRocket {
     if (this.keyStates["ArrowUp"]) {
       this.centerY -= moveAmount * Math.cos(this.angle);
       this.centerX += moveAmount * Math.sin(this.angle);
+  
       //this.createAsteroids();
     }
     if (this.keyStates["ArrowDown"]) {
       this.centerY += moveAmount * Math.cos(this.angle);
       this.centerX -= moveAmount * Math.sin(this.angle);
     }
-    if (this.keyStates["ArrowLeft"]) {
+    if (this.keyStates["z"]) {
       this.angle -= rotateAmount;
     }
-    if (this.keyStates["ArrowRight"]) {
+    if (this.keyStates["c"]) {
       this.angle += rotateAmount;
     }
   }
@@ -181,6 +183,10 @@ class TriangleRocket {
     
     const radiiSum = circle.radius + asteroid.r;
     return distanceSquared < radiiSum * radiiSum;
+  }
+
+  collsionDetectionAsteroidsRocket(asteroid,rocket){
+
   }
 
 

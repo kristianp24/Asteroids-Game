@@ -17,7 +17,7 @@ class TriangleRocket {
 
     window.addEventListener("keydown", (event) => this.keyStates[event.key] = true);
     window.addEventListener("keyup", (event) => this.keyStates[event.key] = false);
-    setInterval(() => this.createAsteroids(), 4000);
+    setInterval(() => this.createAsteroids(), 2500);
 
 
     this.updateAndDraw();
@@ -59,6 +59,7 @@ class TriangleRocket {
 
   updateAsteroids(){
     this.#asteroids.forEach((asteroid,index) => {
+    
       asteroid.corX -= asteroid.speed * Math.sin(asteroid.angle)
       asteroid.corY += asteroid.speed * Math.cos(asteroid.angle)
 
@@ -139,27 +140,32 @@ class TriangleRocket {
   }
 
   drawAsteroids(){
-    for (let asteroids of this.#asteroids){
-      this.#context.strokeStyle  = 'grey'
-      this.#context.strokeRect(asteroids.corX, asteroids.corY, asteroids.w, asteroids.h)
+    //this.#context.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+    for (let asteroid of this.#asteroids){
+      this.#context.beginPath()
+      this.#context.arc(asteroid.corX, asteroid.corY,asteroid.r, 0, 2*Math.PI)
+      this.#context.strokeStyle='green'
+      this.#context.strokeText(asteroid.rocketsToBeDestroyed, asteroid.corX, asteroid.corY + asteroid.r/2)
+      this.#context.stroke()
+      this.#context.closePath()
     }
   }
 
   createAsteroids(){
+    
     for (let i = 0; i<=2 ;i++){
       
-    let x = Math.floor(Math.random() * this.#canvas.width)
-    let y = Math.floor(Math.random() * this.#canvas.height)
-    let w = Math.floor(Math.random() * 10) + 40
-    let h = Math.floor(Math.random() * 10) + 50
+    let x = Math.floor(Math.random() * this.#canvas.width) 
+    let y = Math.floor(Math.random() * this.#canvas.height) 
+    let radius = Math.floor(Math.random() * 20) + 10
+    
     this.#asteroids.push({
        corX: x,
        corY: 0,
-       w: w,
-       h: h,
+       r: radius,
        speed: 1,
        angle: this.angle,
-       rocketsToBeDestroyed : 20
+       rocketsToBeDestroyed : Math.floor(Math.random() * 4) + 1
     });
     }
     
@@ -167,18 +173,14 @@ class TriangleRocket {
 
 
   collisionDetection(circle, asteroid){
-    const rectLeft = asteroid.corX;
-    const rectRight = asteroid.corX + asteroid.w;
-    const rectTop = asteroid.corY;
-    const rectBottom = asteroid.corY + asteroid.h;
-    const closestX = Math.max(rectLeft, Math.min(circle.x, rectRight));
-    const closestY = Math.max(rectTop, Math.min(circle.y, rectBottom));
+    const asteroidDistanceX = circle.x - asteroid.corX
+    const asteroidDistanceY  = circle.y - asteroid.corY
 
-    const distanceX = circle.x - closestX;
-    const distanceY = circle.y - closestY;
+    const distanceSquared = asteroidDistanceX * asteroidDistanceX + asteroidDistanceY * asteroidDistanceY;
 
-    const distanceSquared = distanceX * distanceX + distanceY * distanceY;
-    return distanceSquared < circle.radius * circle.radius;
+    
+    const radiiSum = circle.radius + asteroid.r;
+    return distanceSquared < radiiSum * radiiSum;
   }
 
 

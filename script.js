@@ -1,3 +1,39 @@
+/**
+ * 
+ * @param {HTMLDivElement}
+ */
+
+class DivElementHandle{
+  #points;
+  #lives;
+
+  constructor(){
+    this.divElement = document.getElementById('pointsDisplay')
+    this.divElement2 = document.getElementById('lifeDisplay')
+  }
+
+  parsingDiv(){
+    let text = this.divElement.textContent
+    this.#points = parseInt(text.split(":")[1])
+    this.#lives = parseInt(this.divElement2.textContent.split(":")[1])
+  }
+
+  incrementPoints(numberToBeAdded){
+    this.#points += numberToBeAdded
+    this.checkForLifeAdding()
+  }
+
+  checkForLifeAdding(){
+      if(this.#points >= 50)
+         this.#lives += 1
+  }
+
+  display(){
+    this.divElement.textContent = "Points:"+ this.#points 
+    this.divElement2.textContent = "Reamining lives: "+ this.#lives
+  }
+}
+
 class TriangleRocket {
   #canvas;
   #context;
@@ -7,8 +43,8 @@ class TriangleRocket {
   keyStates = {};
   #circles = [];
   #asteroids = [];
-  #numarDeVieti = 4;
-  #triangle = {}
+  divElementPoints;
+  #triangleRocket = [];
 
   constructor(canvas, context) {
     this.#canvas = canvas;
@@ -16,6 +52,7 @@ class TriangleRocket {
     this.centerX = this.#canvas.width / 2;
     this.centerY = this.#canvas.height / 2;
     this.angle = 0;
+    this.divElementPoints  = new DivElementHandle()
 
     window.addEventListener("keydown", (event) => this.keyStates[event.key] = true);
     window.addEventListener("keyup", (event) => this.keyStates[event.key] = false);
@@ -25,6 +62,21 @@ class TriangleRocket {
     this.updateAndDraw();
   }
   
+  saveRocketData(topX, topY, rightX, rightY, leftX, leftY){
+    if (this.#triangleRocket.length > 0){
+      let _ = this.#triangleRocket.pop()
+    }
+    this.#triangleRocket.push({
+      topX: topX,
+      topY: topY,
+      rightX: rightX,
+      rightY: rightY,
+      leftX: leftX,
+      leftY: leftY
+    })
+    
+  }
+
   drawTriangle() {
     const size = 30;
 
@@ -39,7 +91,7 @@ class TriangleRocket {
     const leftY = this.centerY + size * 0.5 * Math.cos(this.angle) - size * 0.87 * Math.sin(this.angle);
 
     
-
+    this.saveRocketData(topX, topY, rightX, rightY, leftX, leftY)
     this.#context.beginPath();
     this.#context.moveTo(topX, topY);
     this.#context.lineTo(rightX, rightY);
@@ -74,6 +126,10 @@ class TriangleRocket {
       ) {
         this.#asteroids.splice(index, 1);
       }
+
+      if (this.collsionDetectionAsteroidsRocket(asteroid)){
+        this.#asteroids.splice(index, 1);
+      }
     
     })
   }
@@ -100,11 +156,17 @@ class TriangleRocket {
 
                if(asteroid.rocketsToBeDestroyed === 0){
                  this.#asteroids.splice(aSindex, 1);
+                 this.divElementPoints.parsingDiv()
+                 this.divElementPoints.incrementPoints(5)
+                 this.divElementPoints.display()
+                 
                }
 
                this.#circles.splice(index,1);
                return;
             }
+
+            
 
           });
          });
@@ -119,7 +181,7 @@ class TriangleRocket {
     }
   }
 
-  updatePosition() {
+  updateTrianglePosition() {
     const moveAmount = 2;
     const rotateAmount = Math.PI / 180 * 2; 
 
@@ -185,14 +247,25 @@ class TriangleRocket {
     return distanceSquared < radiiSum * radiiSum;
   }
 
-  collsionDetectionAsteroidsRocket(asteroid,rocket){
+  checkVertexCollision(asteroid){
+    let distance1 = Math.sqrt(Math.pow((asteroid.corX-this.#triangleRocket.topX),2) + Math.pow((asteroid.corY-this.#triangleRocket.topY), 2))
+    let distance2 = Math.sqrt(Math.pow((asteroid.corX-this.#triangleRocket.rightX),2) + Math.pow((asteroid.corY-this.#triangleRocket.rightY), 2))
+    let distance3 = Math.sqrt(Math.pow((asteroid.corX-this.#triangleRocket.leftX),2) + Math.pow((asteroid.corY-this.#triangleRocket.leftY), 2))
+    if (distance1 <= asteroid.r || distance2 <= asteroid.r || distance3 <= asteroid.r)
+      return true;
+    else
+       return false;
+  }
 
+  collsionDetectionAsteroidsRocket(asteroid){
+        let vertexCollision = this.checkVertexCollision(asteroid)
+        return vertexCollision
   }
 
 
   updateAndDraw() {
    
-    this.updatePosition();
+    this.updateTrianglePosition();
     this.updateCircles();
     this.updateAsteroids();
     

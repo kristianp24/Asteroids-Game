@@ -5,3 +5,23 @@
     height: 100vh;
     display: flex;
 } 
+
+#pointsDisplay{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 10px;
+    background-color: brown;
+    font-size: 20px;
+    font-style: italic;
+}
+
+#lifeDisplay {
+    position: absolute;
+    top: 60px; /* Adjust this based on the height of the first div */
+    left: 10px;
+    padding: 10px;
+    background-color: green;
+    font-size: 18px;
+    color: white;
+}

@@ -41,15 +41,28 @@ class DivElementHandle{
 
   loseLife(){
       this.#lives -= 1;
+      if (this.#lives < 0)
+        this.#lives = 5
   }
 
-  checkForGameEnd()
-  {
-    if(this.#lives === 0){
-        // let game = new AsteroidsGame();
-        // game.createCanvas();
-    }
-  }
+  // checkForGameEnd(canvas)
+  // {
+  //   if(this.#lives === 0){
+  //       this.#points = 0
+  //       canvas.remove()
+  //       //context.clearRect(0, 0, canvas.width, canvas.height); 
+       
+  //       const newCanvas = document.createElement('canvas');
+  //       newCanvas.width = 900
+  //       newCanvas.height = 600
+  //       const context2 = newCanvas.getContext('2d');
+  //       document.body.appendChild(newCanvas);
+
+  //       const newGame = new AsteroidsGame(newCanvas, context2)
+  //       newGame.createCanvas()
+  //       this.#lives = 5
+  //   }
+  // }
 }
 
 class TriangleRocket {
@@ -148,8 +161,9 @@ class TriangleRocket {
       if (this.collsionDetectionAsteroidsRocket(asteroid)){
         this.#asteroids.splice(index, 1);
         this.divElementPoints.loseLife()
+        //this.divElementPoints.checkForGameEnd(this.#canvas, this.#context)
         this.divElementPoints.display()
-        this.divElementPoints.checkForGameEnd()
+        
       }
     
     })
@@ -351,7 +365,6 @@ class AsteroidsGame{
  */
 
 constructor(canvas, context){
-     
      this.#canvas = canvas;
      this.#context = context;
 }
@@ -359,7 +372,7 @@ constructor(canvas, context){
 
 createCanvas(){
    // this.#triangleRocket.drawTriangle();
-   this.#triangleRocket = new TriangleRocket(canvas, context);
+   this.#triangleRocket = new TriangleRocket(this.#canvas, this.#context);
     
 }
 

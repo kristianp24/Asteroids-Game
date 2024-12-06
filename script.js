@@ -10,6 +10,8 @@ class DivElementHandle{
   constructor(){
     this.divElement = document.getElementById('pointsDisplay')
     this.divElement2 = document.getElementById('lifeDisplay')
+    this.#lives = 5;
+    this.#points = 0;
   }
 
   parsingDiv(){
@@ -25,12 +27,28 @@ class DivElementHandle{
 
   checkForLifeAdding(){
       if(this.#points >= 50)
+      {
          this.#lives += 1
+         this.#points = 0
+      }
+        
   }
 
   display(){
     this.divElement.textContent = "Points:"+ this.#points 
     this.divElement2.textContent = "Reamining lives: "+ this.#lives
+  }
+
+  loseLife(){
+      this.#lives -= 1;
+  }
+
+  checkForGameEnd()
+  {
+    if(this.#lives === 0){
+        // let game = new AsteroidsGame();
+        // game.createCanvas();
+    }
   }
 }
 
@@ -56,7 +74,7 @@ class TriangleRocket {
 
     window.addEventListener("keydown", (event) => this.keyStates[event.key] = true);
     window.addEventListener("keyup", (event) => this.keyStates[event.key] = false);
-    setInterval(() => this.createAsteroids(), 2500);
+    setInterval(() => this.createAsteroids(), 1000);
 
 
     this.updateAndDraw();
@@ -105,7 +123,7 @@ class TriangleRocket {
         x:topX,
         y:topY,
         radius:5,
-        speed:10,
+        speed:15,
         angle:this.angle
       });
     }
@@ -129,6 +147,9 @@ class TriangleRocket {
 
       if (this.collsionDetectionAsteroidsRocket(asteroid)){
         this.#asteroids.splice(index, 1);
+        this.divElementPoints.loseLife()
+        this.divElementPoints.display()
+        this.divElementPoints.checkForGameEnd()
       }
     
     })
@@ -257,9 +278,49 @@ class TriangleRocket {
        return false;
   }
 
+  checkEdgeCollision(asteroid){
+    let rocket = this.#triangleRocket[0]
+    let edges = [
+      {x1:rocket.topX, y1:rocket.topY, x2:rocket.leftX, y2:rocket.leftY},
+      {x1:rocket.rightX, y1:rocket.rightY, x2:rocket.leftX, y2:rocket.leftY},
+      {x1:rocket.leftX, y1:rocket.leftY, x2:rocket.topX, y2:rocket.topY}
+    ]
+
+    for (let edge of edges){
+      let distanceX = edge.x2 - edge.x1
+      let distanceY = edge.y2 - edge.y1
+      let distanceCircleX = asteroid.corX - edge.x1
+      let distanceCircleY = asteroid.corY - edge.y1
+
+      let t = (distanceCircleX * distanceX + distanceCircleY * distanceY) / (Math.pow(distanceX,2) + Math.pow(distanceY, 2));
+
+      const modifiedT = Math.max(0, Math.min(1, t));
+
+
+      const closestX = edge.x1 + modifiedT * distanceX;
+      const closestY = edge.y1 + modifiedT * distanceY;
+
+      let distance = Math.sqrt(Math.pow((asteroid.corX-closestX),2) + Math.pow((asteroid.corY-closestY), 2));
+
+      if (distance <= asteroid.r){
+        return true;
+      }
+      
+    }
+
+    return false
+
+  }
+
+
   collsionDetectionAsteroidsRocket(asteroid){
-        let vertexCollision = this.checkVertexCollision(asteroid)
-        return vertexCollision
+        let vertexCollision = this.checkVertexCollision(asteroid);
+        let edgeCollision = this.checkEdgeCollision(asteroid);
+        
+        if (vertexCollision || edgeCollision)
+          return true;
+        else
+          return false
   }
 
 
@@ -302,9 +363,4 @@ createCanvas(){
     
 }
 
-
 }
-
-
-
-

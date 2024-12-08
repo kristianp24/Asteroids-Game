@@ -236,6 +236,12 @@ class TriangleRocket {
     if (this.keyStates["c"]) {
       this.angle += rotateAmount;
     }
+    if (this.keyStates["ArrowLeft"]){
+      this.centerX -= moveAmount* Math.cos(this.angle);
+    }
+    if(this.keyStates["ArrowRight"]){
+      this.centerX += moveAmount* Math.cos(this.angle);
+    }
   }
 
   drawAsteroids(){

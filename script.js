@@ -6,18 +6,22 @@
 class DivElementHandle{
   #points;
   #lives;
+  #score
 
   constructor(){
     this.divElement = document.getElementById('pointsDisplay')
     this.divElement2 = document.getElementById('lifeDisplay')
+    this.scoreDiv = document.getElementById('scoreDisplay')
     this.#lives = 5;
     this.#points = 0;
+    this.#score = 0.0;
   }
 
   parsingDiv(){
     let text = this.divElement.textContent
     this.#points = parseInt(text.split(":")[1])
     this.#lives = parseInt(this.divElement2.textContent.split(":")[1])
+    this.#score = parseFloat(this.scoreDiv.textContent.split(":")[1])
   }
 
   incrementPoints(numberToBeAdded){
@@ -34,35 +38,30 @@ class DivElementHandle{
         
   }
 
+  addScore(){
+    this.#score += (this.#points / 3)
+   this.#score= Math.round(this.#score)
+  }
+
   display(){
     this.divElement.textContent = "Points:"+ this.#points 
     this.divElement2.textContent = "Reamining lives: "+ this.#lives
+    this.scoreDiv.textContent = "Your score: "+this.#score
   }
 
   loseLife(){
       this.#lives -= 1;
-      if (this.#lives < 0)
-        this.#lives = 5
+      this.#score -= 15
   }
 
-  // checkForGameEnd(canvas)
-  // {
-  //   if(this.#lives === 0){
-  //       this.#points = 0
-  //       canvas.remove()
-  //       //context.clearRect(0, 0, canvas.width, canvas.height); 
-       
-  //       const newCanvas = document.createElement('canvas');
-  //       newCanvas.width = 900
-  //       newCanvas.height = 600
-  //       const context2 = newCanvas.getContext('2d');
-  //       document.body.appendChild(newCanvas);
-
-  //       const newGame = new AsteroidsGame(newCanvas, context2)
-  //       newGame.createCanvas()
-  //       this.#lives = 5
-  //   }
-  // }
+  checkForGameEnd(canvas, context)
+  {
+    if(this.#lives === 0){
+        this.#points = 0
+        return true;
+    }
+    return false;
+  }
 }
 
 class TriangleRocket {
@@ -76,6 +75,7 @@ class TriangleRocket {
   #asteroids = [];
   divElementPoints;
   #triangleRocket = [];
+  #gameEnd;
 
   constructor(canvas, context) {
     this.#canvas = canvas;
@@ -83,7 +83,9 @@ class TriangleRocket {
     this.centerX = this.#canvas.width / 2;
     this.centerY = this.#canvas.height / 2;
     this.angle = 0;
+    this.#gameEnd = false;
     this.divElementPoints  = new DivElementHandle()
+    this.divElementPoints.display()
 
     window.addEventListener("keydown", (event) => this.keyStates[event.key] = true);
     window.addEventListener("keyup", (event) => this.keyStates[event.key] = false);
@@ -160,10 +162,12 @@ class TriangleRocket {
 
       if (this.collsionDetectionAsteroidsRocket(asteroid)){
         this.#asteroids.splice(index, 1);
-        this.divElementPoints.loseLife()
-        //this.divElementPoints.checkForGameEnd(this.#canvas, this.#context)
-        this.divElementPoints.display()
+        this.#gameEnd = this.divElementPoints.checkForGameEnd(this.#canvas, this.#context)
+        if (this.#gameEnd === false){
+          this.divElementPoints.loseLife()
         
+          this.divElementPoints.display()
+        }
       }
     
     })
@@ -193,6 +197,7 @@ class TriangleRocket {
                  this.#asteroids.splice(aSindex, 1);
                  this.divElementPoints.parsingDiv()
                  this.divElementPoints.incrementPoints(5)
+                 this.divElementPoints.addScore()
                  this.divElementPoints.display()
                  
                }
@@ -345,16 +350,35 @@ class TriangleRocket {
 
 
   updateAndDraw() {
+      if (this.#gameEnd === false){
+      this.updateTrianglePosition();
+      this.updateCircles(); 
+      this.updateAsteroids();
+
+      this.drawTriangle();
+      this.drawCircles();
+      this.drawAsteroids();
+      requestAnimationFrame(() => this.updateAndDraw());
+    }
+    else{
+      this.#context.clearRect(0, 0, this.#canvas.width, this.#canvas.height); 
+      console.log("Game over amigo")
+      let divGameOver = document.getElementById('gameOver')
+      divGameOver.hidden = false;
+      let restartBtn = document.getElementById('restartGame')
+      restartBtn.hidden = false
+      restartBtn.addEventListener('click', ()=>{
+        const canvas = document.getElementById('canvas-page');
+        const context = canvas.getContext('2d');
+        let newgame = new AsteroidsGame(canvas, context)
+        newgame.createCanvas()
+        divGameOver.hidden = true
+        restartBtn.hidden = true
+      })
    
-    this.updateTrianglePosition();
-    this.updateCircles();
-    this.updateAsteroids();
+    }
     
-    this.drawTriangle();
-    this.drawCircles();
-    this.drawAsteroids();
-    
-    requestAnimationFrame(() => this.updateAndDraw());
+   
   }
 }
 

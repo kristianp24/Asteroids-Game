@@ -6,6 +6,39 @@
     display: flex;
 } 
 
+#gameOver{
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Centers content vertically */
+    justify-content: center; /* Centers content horizontally */
+    position: absolute; /* Ensures it's positioned relative to the viewport */
+    top: 25%; /* Positions the top edge */
+    left: 40%;
+}
+
+#restartGame{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    right: 40%;
+}
+
+#scoreDisplay{
+    position: absolute;
+    top: 110px;
+    left: 10px;
+    padding: 10px;
+    background-color: orangered;
+    font-size: 18px;
+    color: white;
+}
+
+[hidden] {
+    display: none !important;
+}
+
 #pointsDisplay{
     position: absolute;
     top: 10px;
@@ -14,11 +47,12 @@
     background-color: brown;
     font-size: 20px;
     font-style: italic;
+    color: white;
 }
 
 #lifeDisplay {
     position: absolute;
-    top: 60px; /* Adjust this based on the height of the first div */
+    top: 60px;
     left: 10px;
     padding: 10px;
     background-color: green;

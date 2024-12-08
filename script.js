@@ -17,6 +17,10 @@ class DivElementHandle{
     this.#score = 0.0;
   }
 
+  getScore(){
+    return this.#score;
+  }
+
   parsingDiv(){
     let text = this.divElement.textContent
     this.#points = parseInt(text.split(":")[1])
@@ -267,13 +271,13 @@ class TriangleRocket {
       
     let x = Math.floor(Math.random() * this.#canvas.width) 
     let y = Math.floor(Math.random() * this.#canvas.height) 
-    let radius = Math.floor(Math.random() * 20) + 10
+    let radius = Math.floor(Math.random() * 20) + 15
     
     this.#asteroids.push({
        corX: x,
        corY: 0,
        r: radius,
-       speed: 1,
+       speed: Math.floor(Math.random() * 3) + 1,
        angle: this.angle,
        rocketsToBeDestroyed : Math.floor(Math.random() * 4) + 1
     });
@@ -348,6 +352,56 @@ class TriangleRocket {
           return false
   }
 
+  saveScore(score){
+    console.log(localStorage)
+    let values = []
+    let keys = []
+    for(let i = 0; i<localStorage.length; i++){
+        let key = localStorage.key(i)
+        let value = Number(localStorage.getItem(key))
+        keys.push(key)
+        values.push(value)
+    }
+  
+    let min = Math.min(...values.map(Number));
+    if (score > min || localStorage.length < 5){
+      let bestScoreHint = document.getElementById('bestScore')
+      bestScoreHint.hidden = false
+      let nameDisplay = document.getElementById('name')
+      nameDisplay.hidden = false
+      let nameInput = document.getElementById('nameDiv')
+      nameInput.hidden = false
+      
+      let saveBtn = document.getElementById('saveBtn')
+      saveBtn.hidden = false
+    
+      saveBtn.addEventListener('click', ()=>{
+         let index = values.findIndex(value => value === min)
+         let keyMin = keys[index]
+         let name = nameInput.value;
+
+         if(localStorage.length < 5){
+          localStorage.setItem(name, score)
+          console.log(`Saved: ${name} - ${score}`);
+          console.log(localStorage.length)
+        }
+        else{
+          
+          localStorage.removeItem(keyMin)
+          localStorage.setItem(name, score)
+          console.log(`Replaced: ${keyMin} with ${name} - ${score}`);
+          console.log(localStorage.length)
+        }
+      
+        bestScoreHint.hidden = true
+        nameDisplay.hidden = true
+        nameInput.hidden = true
+        saveBtn.hidden = true
+      })
+      
+    }
+
+}
 
   updateAndDraw() {
       if (this.#gameEnd === false){
@@ -362,11 +416,13 @@ class TriangleRocket {
     }
     else{
       this.#context.clearRect(0, 0, this.#canvas.width, this.#canvas.height); 
-      console.log("Game over amigo")
+      //console.log("Game over amigo")
       let divGameOver = document.getElementById('gameOver')
       divGameOver.hidden = false;
       let restartBtn = document.getElementById('restartGame')
       restartBtn.hidden = false
+      let score = this.divElementPoints.getScore()
+      this.saveScore(score)
       restartBtn.addEventListener('click', ()=>{
         const canvas = document.getElementById('canvas-page');
         const context = canvas.getContext('2d');
@@ -377,9 +433,10 @@ class TriangleRocket {
       })
    
     }
-    
    
   }
+  
+  
 }
 
 
@@ -401,7 +458,6 @@ constructor(canvas, context){
 
 
 createCanvas(){
-   // this.#triangleRocket.drawTriangle();
    this.#triangleRocket = new TriangleRocket(this.#canvas, this.#context);
     
 }

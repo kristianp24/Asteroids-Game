@@ -7,12 +7,59 @@
 } 
 
 #gameOver{
-    display: flex; /* Enables flexbox */
-    align-items: center; /* Centers content vertically */
-    justify-content: center; /* Centers content horizontally */
-    position: absolute; /* Ensures it's positioned relative to the viewport */
-    top: 25%; /* Positions the top edge */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 25%; 
     left: 40%;
+}
+
+#bestScore{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 30%; 
+    left: 40%;
+}
+
+#nameDiv{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 35%;
+    left: 45%;
+    
+}
+
+#name{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 35%;
+    right: 55%;
+    
+}
+
+#saveBtn{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 40%;
+    left: 45%;
+}
+
+#hintSaved{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 45%;
+    left: 44%;
 }
 
 #restartGame{
@@ -20,7 +67,7 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 30%;
+    top: 50%;
     left: 40%;
     right: 40%;
 }

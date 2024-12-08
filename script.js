@@ -36,7 +36,8 @@ class DivElementHandle{
   checkForLifeAdding(){
       if(this.#points >= 50)
       {
-         this.#lives += 1
+        
+          this.#lives += 1
          this.#points = 0
       }
         

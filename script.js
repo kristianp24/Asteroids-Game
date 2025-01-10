@@ -143,7 +143,7 @@ class TriangleRocket {
         x:topX,
         y:topY,
         radius:5,
-        speed:15,
+        speed:8,
         angle:this.angle
       });
     }

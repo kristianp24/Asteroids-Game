@@ -1,20 +1,55 @@
-This is an Asteroids Game implemented in JavaScript.
+# 🚀 Asteroids Game
 
-The Spaceship can be moved with:
-Arrow up -> Move forward, 
-Arrow down -> Move backwards, 
-Arrow left -> Move left, 
-Arrow right -> Move right, 
-z -> Rotate left, 
-c -> Rotate right, 
-x -> Throw rockets, 
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/HTML-5-orange?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS-3-blue?logo=css3&logoColor=white)
+![Web Storage](https://img.shields.io/badge/Web%20Storage-Enabled-success?logo=googlechrome&logoColor=white)
 
-Each time the user gains 50 Points, 1 life is added.
+> 🕹️ A simple browser-based Asteroids game built in JavaScript!
 
-For every amount of points gained, some score is calculated.
+This is a classic-style **Asteroids Game** implemented in **JavaScript**, **HTML**, and a bit of **CSS** for visuals.  
+Fly your spaceship, shoot asteroids, score points, and climb the high score board! 🎯
 
-In every life removal, the score is reduced by 15.
+---
 
-The game saves the 5 best results using Web Storage API.
+## 🎮 Controls
 
+| Action             | Key |
+|--------------------|-----|
+| Move Forward       | ⬆️ Arrow Up |
+| Move Backward      | ⬇️ Arrow Down |
+| Move Left          | ⬅️ Arrow Left |
+| Move Right         | ➡️ Arrow Right |
+| Rotate Left        | `Z` |
+| Rotate Right       | `C` |
+| Fire Rocket        | `X` |
+
+---
+
+## 🧠 Game Rules
+
+- 💥 Destroy asteroids to gain points.
+- 🎯 Every **50 points** = +1 extra life.
+- 💔 Losing a life **subtracts 15 points** from your score.
+- 🏆 The top **5 high scores** are saved using the **Web Storage API** (in your browser's local storage).
+
+---
+
+## 🧰 Tech Stack
+
+- **JavaScript** – Game logic & controls
+- **HTML** – Canvas & structure
+- **CSS** – Basic styling
+- **Web Storage API** – High score persistence
+
+---
+
+## 🚀 How to Play
+
+1. **Clone or download** the repository:
+   ```bash
+   git clone https://github.com/kristianp24/Asteroids-Game.git
+2. Open index.html in your browser.
+
+3. Play directly – no server or install needed!
 

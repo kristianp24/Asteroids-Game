@@ -5,9 +5,9 @@
 ![CSS3](https://img.shields.io/badge/CSS-3-blue?logo=css3&logoColor=white)
 ![Web Storage](https://img.shields.io/badge/Web%20Storage-Enabled-success?logo=googlechrome&logoColor=white)
 
-> 🕹️ A simple browser-based Asteroids game built in JavaScript!
+> 🕹️ A simple browser - based Asteroids game built in JavaScript!
 
-This is a classic-style **Asteroids Game** implemented in **JavaScript**, **HTML**, and a bit of **CSS** for visuals.  
+This is a classic style **Asteroids Game** implemented in **JavaScript**, **HTML**, and a bit of **CSS** for visuals.  
 Fly your spaceship, shoot asteroids, score points, and climb the high score board! 🎯
 
 ---

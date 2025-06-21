@@ -143,7 +143,7 @@ class TriangleRocket {
         x:topX,
         y:topY,
         radius:5,
-        speed:8,
+        speed:9,
         angle:this.angle
       });
     }
@@ -188,7 +188,8 @@ class TriangleRocket {
         circle.x > this.#canvas.width ||
         circle.y < 0 ||
         circle.y > this.#canvas.height
-      ) {
+      ) 
+      {
         this.#circles.splice(index, 1);
       }
            
@@ -231,8 +232,9 @@ class TriangleRocket {
     const rotateAmount = Math.PI / 180 * 2; 
 
     if (this.keyStates["ArrowUp"]) {
-      this.centerY -= moveAmount * Math.cos(this.angle);
-      this.centerX += moveAmount * Math.sin(this.angle);
+      // pt a calcula diretia de miscare in functie de unghiul actual al obiectului
+      this.centerY -= moveAmount * Math.cos(this.angle); // cat de mult sa te misti pe axa y
+      this.centerX += moveAmount * Math.sin(this.angle); // cat de mult sa te misti pe axa x
   
       //this.createAsteroids();
     }
@@ -325,8 +327,7 @@ class TriangleRocket {
       let t = (distanceCircleX * distanceX + distanceCircleY * distanceY) / (Math.pow(distanceX,2) + Math.pow(distanceY, 2));
 
       const modifiedT = Math.max(0, Math.min(1, t));
-
-
+      
       const closestX = edge.x1 + modifiedT * distanceX;
       const closestY = edge.y1 + modifiedT * distanceY;
 
@@ -413,7 +414,9 @@ class TriangleRocket {
       this.drawTriangle();
       this.drawCircles();
       this.drawAsteroids();
-      requestAnimationFrame(() => this.updateAndDraw());
+      requestAnimationFrame(() => this.updateAndDraw()); // folosita pt a crea o animatie fluida in browser
+      // broswer ruleaza cadru succesive pentru a crea idea de miscare sau animatie (60fps)
+      // face functie updateAndDraw sa fie apelata in repetare de cate ori o sa fie nevoie
     }
     else{
       this.#context.clearRect(0, 0, this.#canvas.width, this.#canvas.height); 

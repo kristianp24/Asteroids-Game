@@ -44,6 +44,10 @@ Fly your spaceship, shoot asteroids, score points, and climb the high score boar
 
 ---
 
+# 📷 App Capture
+![Photo](./app.PNG)
+
+
 ## 🚀 How to Play
 
 1. **Clone or download** the repository:
